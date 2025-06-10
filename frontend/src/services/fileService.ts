@@ -17,7 +17,10 @@ export const fileService = {
   },
 
   async getFiles(params: FileQueryParams = {}): Promise<FileType[]> {
-    const response = await axios.get(`${API_URL}/files/`, { params });
+    const cleanedParams = Object.fromEntries(
+      Object.entries(params).filter(([_, v]) => v !== undefined)
+    );
+    const response = await axios.get(`${API_URL}/files/`, { params: cleanedParams });
     return response.data;
   },
 

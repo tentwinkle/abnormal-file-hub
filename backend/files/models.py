@@ -29,3 +29,12 @@ class File(models.Model):
     
     def __str__(self):
         return self.original_filename
+
+    def delete(self, using=None, keep_parents=False):
+        """Remove DB record and delete file from disk if no other records reference it."""
+        file_path = self.file.name
+        super().delete(using=using, keep_parents=keep_parents)
+        if not File.objects.filter(file=file_path).exists():
+            storage = self.file.storage
+            if storage.exists(file_path):
+                storage.delete(file_path)

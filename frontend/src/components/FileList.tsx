@@ -1,16 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { fileService } from '../services/fileService';
-import { File as FileType } from '../types/file';
+import { File as FileType, FileQueryParams } from '../types/file';
 import { DocumentIcon, TrashIcon, ArrowDownTrayIcon } from '@heroicons/react/24/outline';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 export const FileList: React.FC = () => {
   const queryClient = useQueryClient();
+  const [filters, setFilters] = useState<FileQueryParams>({});
 
   // Query for fetching files
   const { data: files, isLoading, error } = useQuery({
-    queryKey: ['files'],
-    queryFn: fileService.getFiles,
+    queryKey: ['files', filters],
+    queryFn: () => fileService.getFiles(filters),
+  });
+
+  const { data: savings } = useQuery({
+    queryKey: ['savings'],
+    queryFn: fileService.getStorageSavings,
   });
 
   // Mutation for deleting files
@@ -88,6 +94,65 @@ export const FileList: React.FC = () => {
   return (
     <div className="p-6">
       <h2 className="text-xl font-semibold text-gray-900 mb-4">Uploaded Files</h2>
+
+      <div className="mb-4 grid md:grid-cols-6 gap-2">
+        <input
+          type="text"
+          placeholder="Search"
+          value={filters.search || ''}
+          onChange={(e) => setFilters({ ...filters, search: e.target.value })}
+          className="border p-2 rounded col-span-2"
+        />
+        <input
+          type="text"
+          placeholder="File type"
+          value={filters.file_type || ''}
+          onChange={(e) => setFilters({ ...filters, file_type: e.target.value })}
+          className="border p-2 rounded"
+        />
+        <input
+          type="number"
+          placeholder="Min KB"
+          value={filters.size_min ?? ''}
+          onChange={(e) =>
+            setFilters({
+              ...filters,
+              size_min: e.target.value ? Number(e.target.value) : undefined,
+            })
+          }
+          className="border p-2 rounded"
+        />
+        <input
+          type="number"
+          placeholder="Max KB"
+          value={filters.size_max ?? ''}
+          onChange={(e) =>
+            setFilters({
+              ...filters,
+              size_max: e.target.value ? Number(e.target.value) : undefined,
+            })
+          }
+          className="border p-2 rounded"
+        />
+        <input
+          type="date"
+          value={filters.date_from || ''}
+          onChange={(e) => setFilters({ ...filters, date_from: e.target.value })}
+          className="border p-2 rounded"
+        />
+        <input
+          type="date"
+          value={filters.date_to || ''}
+          onChange={(e) => setFilters({ ...filters, date_to: e.target.value })}
+          className="border p-2 rounded"
+        />
+      </div>
+
+      {typeof savings?.storage_savings === 'number' && (
+        <div className="text-sm text-gray-600 mb-2">
+          Storage saved: {(savings.storage_savings / 1024).toFixed(2)} KB
+        </div>
+      )}
       {!files || files.length === 0 ? (
         <div className="text-center py-12">
           <DocumentIcon className="mx-auto h-12 w-12 text-gray-400" />

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { File as FileType } from '../types/file';
+import { File as FileType, FileQueryParams } from '../types/file';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
 
@@ -16,8 +16,13 @@ export const fileService = {
     return response.data;
   },
 
-  async getFiles(): Promise<FileType[]> {
-    const response = await axios.get(`${API_URL}/files/`);
+  async getFiles(params: FileQueryParams = {}): Promise<FileType[]> {
+    const response = await axios.get(`${API_URL}/files/`, { params });
+    return response.data;
+  },
+
+  async getStorageSavings(): Promise<{ storage_savings: number }> {
+    const response = await axios.get(`${API_URL}/files/savings/`);
     return response.data;
   },
 

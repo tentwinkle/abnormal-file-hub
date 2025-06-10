@@ -14,10 +14,18 @@ class File(models.Model):
     original_filename = models.CharField(max_length=255)
     file_type = models.CharField(max_length=100)
     size = models.BigIntegerField()
+    file_hash = models.CharField(max_length=64, db_index=True)
     uploaded_at = models.DateTimeField(auto_now_add=True)
-    
+
     class Meta:
         ordering = ['-uploaded_at']
+        indexes = [
+            models.Index(fields=['original_filename']),
+            models.Index(fields=['file_type']),
+            models.Index(fields=['size']),
+            models.Index(fields=['uploaded_at']),
+            models.Index(fields=['file_hash']),
+        ]
     
     def __str__(self):
         return self.original_filename

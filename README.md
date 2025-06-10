@@ -17,6 +17,8 @@ A full-stack file management application built with React and Django, designed f
 - Axios for API communication
 - Tailwind CSS for styling
 - Heroicons for UI elements
+- File deduplication logic to save storage
+- Search and filtering interface for quick retrieval
 
 ### Infrastructure
 - Docker and Docker Compose
@@ -96,6 +98,11 @@ docker-compose up --build
 
 #### List Files
 - **GET** `/api/files/`
+- Query parameters:
+  - `search`: search by filename
+  - `file_type`: filter by MIME type
+  - `size_min` / `size_max`: size range in bytes
+  - `date_from` / `date_to`: upload date range (YYYY-MM-DD)
 - Returns a list of all uploaded files
 - Response includes file metadata (name, size, type, upload date)
 
@@ -117,6 +124,10 @@ docker-compose up --build
 
 #### Download File
 - Access file directly through the file URL provided in metadata
+
+#### Storage Savings
+- **GET** `/api/files/savings/`
+- Returns total bytes saved by deduplication
 
 ## 🗄️ Project Structure
 

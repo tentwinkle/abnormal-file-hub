@@ -112,7 +112,7 @@ export const FileList: React.FC = () => {
         />
         <input
           type="number"
-          placeholder="Min KB"
+          placeholder="Min bytes"
           value={filters.size_min ?? ''}
           onChange={(e) =>
             setFilters({
@@ -124,7 +124,7 @@ export const FileList: React.FC = () => {
         />
         <input
           type="number"
-          placeholder="Max KB"
+          placeholder="Max bytes"
           value={filters.size_max ?? ''}
           onChange={(e) =>
             setFilters({
@@ -150,7 +150,7 @@ export const FileList: React.FC = () => {
 
       {typeof savings?.storage_savings === 'number' && (
         <div className="text-sm text-gray-600 mb-2">
-          Storage saved: {(savings.storage_savings / 1024).toFixed(2)} KB
+          Storage saved: {savings.storage_savings} bytes
         </div>
       )}
       {!files || files.length === 0 ? (
@@ -175,7 +175,7 @@ export const FileList: React.FC = () => {
                       {file.original_filename}
                     </p>
                     <p className="text-sm text-gray-500">
-                      {file.file_type} • {(file.size / 1024).toFixed(2)} KB
+                      {file.file_type} • {file.size} bytes
                     </p>
                     <p className="text-sm text-gray-500">
                       Uploaded {new Date(file.uploaded_at).toLocaleString()}

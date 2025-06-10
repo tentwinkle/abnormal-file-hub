@@ -102,6 +102,7 @@ docker-compose up --build
   - `search`: search by filename
   - `file_type`: filter by MIME type
   - `size_min` / `size_max`: size range in bytes
+  - All file sizes returned by the API and displayed in the UI are measured in bytes
   - `date_from` / `date_to`: upload date range (YYYY-MM-DD)
 - Returns a list of all uploaded files
 - Response includes file metadata (name, size, type, upload date)
